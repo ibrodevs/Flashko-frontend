@@ -24,16 +24,32 @@ export function FlashcardSetCard({ set }: FlashcardSetCardProps) {
           </h3>
         </Link>
 
+        {/* Badges for draft and mistakes */}
+        <div className="flex flex-wrap items-center gap-1.5 mt-2">
+          {set.has_active_session && (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[var(--blue-soft)] text-[var(--blue)] border border-[var(--blue)]/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--blue)] animate-pulse" />
+              Есть черновик
+            </span>
+          )}
+          {set.mistakes_count !== undefined && set.mistakes_count > 0 && (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[var(--amber-bg)] text-[var(--amber)] border border-[var(--amber)]/20">
+              Ошибок: {set.mistakes_count}
+            </span>
+          )}
+        </div>
+
         {set.description ? (
-          <p className="text-[14px] text-[var(--muted)] mt-1.5 line-clamp-2 leading-relaxed">
+          <p className="text-[14px] text-[var(--muted)] mt-2 line-clamp-2 leading-relaxed">
             {set.description}
           </p>
         ) : (
-          <p className="text-[14px] text-[var(--muted)]/60 italic mt-1.5">
+          <p className="text-[14px] text-[var(--muted)]/60 italic mt-2">
             Без описания
           </p>
         )}
       </div>
+
 
       <div className="mt-6 pt-4 border-t border-[var(--line)] flex items-center justify-between gap-3">
         <div className="flex flex-col gap-1 text-[13px] text-[var(--muted)]">

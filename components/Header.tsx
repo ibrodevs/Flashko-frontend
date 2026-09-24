@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from './Button';
-import { BookOpen, LogOut, User as UserIcon, Moon, Sun } from 'lucide-react';
+import { BookOpen, LogOut, User as UserIcon, Moon, Sun, Layers } from 'lucide-react';
 
 export function Header() {
   const { user, logout, initialized } = useAuth();
@@ -74,18 +74,20 @@ export function Header() {
               {/* Меню авторизованного пользователя */}
               <Link
                 href="/dashboard"
-                className={`hidden sm:inline-flex px-3 py-1.5 rounded-[10px] text-[14px] font-medium transition-colors ${
+                className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-[10px] text-[13px] sm:text-[14px] font-medium transition-colors ${
                   pathname === '/dashboard'
                     ? 'text-[var(--blue)] bg-[var(--blue-soft)] font-semibold'
                     : 'text-[var(--body)] hover:bg-[var(--hover)]'
                 }`}
               >
-                Мои наборы
+                <Layers className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Мои наборы</span>
+                <span className="sm:hidden">Наборы</span>
               </Link>
               
               <Link
                 href="/profile"
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] text-[14px] font-medium transition-colors ${
+                className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-[10px] text-[13px] sm:text-[14px] font-medium transition-colors ${
                   pathname === '/profile'
                     ? 'text-[var(--blue)] bg-[var(--blue-soft)] font-semibold'
                     : 'text-[var(--body)] hover:bg-[var(--hover)]'
@@ -101,7 +103,8 @@ export function Header() {
                 size="sm"
                 onClick={handleLogout}
                 icon={<LogOut className="w-3.5 h-3.5" />}
-                className="text-[var(--muted)] hover:text-[var(--red-strong)]"
+                className="text-[var(--muted)] hover:text-[var(--red-strong)] px-2 sm:px-3"
+                title="Выйти"
               >
                 <span className="hidden sm:inline">Выйти</span>
               </Button>

@@ -43,4 +43,13 @@ export const sets = {
   async deleteCard(cardId: number | string): Promise<void> {
     return api.delete(`/api/cards/${cardId}/`);
   },
+
+  async getShared(shareId: string): Promise<FlashcardSetDetail> {
+    return api.get<FlashcardSetDetail>(`/api/sets/share/${shareId}/`, { skipAuth: true });
+  },
+
+  async copyShared(shareId: string): Promise<FlashcardSetDetail> {
+    return api.post<FlashcardSetDetail>(`/api/sets/share/${shareId}/copy/`);
+  },
 };
+

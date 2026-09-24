@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
@@ -17,9 +17,27 @@ export default function CreateSetPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [rawText, setRawText] = useState('');
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
+
+  const insertSymbol = (symbol: string) => {
+    const el = textareaRef.current;
+    if (!el) {
+      setRawText((prev) => prev + symbol);
+      return;
+    }
+    const start = el.selectionStart ?? rawText.length;
+    const end = el.selectionEnd ?? rawText.length;
+    const nextText = rawText.substring(0, start) + symbol + rawText.substring(end);
+    setRawText(nextText);
+    setTimeout(() => {
+      el.focus();
+      const pos = start + symbol.length;
+      el.setSelectionRange(pos, pos);
+    }, 0);
+  };
 
   useEffect(() => {
     if (initialized && !user) {
@@ -147,7 +165,7 @@ touch, Создаёт пустой файл`;
 
         {/* Поле импорта текста карточек */}
         <div className="card card-pad space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <label className="label">
               Импорт карточек
             </label>
@@ -156,7 +174,54 @@ touch, Создаёт пустой файл`;
             </span>
           </div>
 
+          {/* Панель быстрых символов (особенно полезна на телефонах) */}
+          <div className="flex flex-wrap items-center gap-1.5 text-xs text-[var(--muted)]">
+            <span className="hidden xs:inline mr-1 text-xs">Быстрый ввод:</span>
+            <button
+              type="button"
+              onClick={() => insertSymbol(', ')}
+              className="px-2.5 py-1 rounded-[8px] bg-[var(--surface-2)] hover:bg-[var(--hover)] text-[var(--ink)] font-semibold border border-[var(--field-line)] active:scale-95 transition-all text-xs"
+              title="Вставить запятую"
+            >
+              , Запятая
+            </button>
+            <button
+              type="button"
+              onClick={() => insertSymbol('; ')}
+              className="px-2.5 py-1 rounded-[8px] bg-[var(--surface-2)] hover:bg-[var(--hover)] text-[var(--ink)] font-semibold border border-[var(--field-line)] active:scale-95 transition-all text-xs"
+              title="Вставить точку с запятой"
+            >
+              ; Точка с запятой
+            </button>
+            <button
+              type="button"
+              onClick={() => insertSymbol(' - ')}
+              className="px-2.5 py-1 rounded-[8px] bg-[var(--surface-2)] hover:bg-[var(--hover)] text-[var(--ink)] font-semibold border border-[var(--field-line)] active:scale-95 transition-all text-xs"
+              title="Вставить тире"
+            >
+              &mdash; Тире
+            </button>
+            <button
+              type="button"
+              onClick={() => insertSymbol('\n')}
+              className="px-2.5 py-1 rounded-[8px] bg-[var(--surface-2)] hover:bg-[var(--hover)] text-[var(--ink)] font-semibold border border-[var(--field-line)] active:scale-95 transition-all text-xs"
+              title="Перенос строки"
+            >
+              &crarr; Перенос
+            </button>
+            {rawText && (
+              <button
+                type="button"
+                onClick={() => setRawText('')}
+                className="ml-auto px-2 py-1 rounded-[8px] text-[var(--muted)] hover:text-[var(--red-strong)] text-xs transition-colors"
+              >
+                Очистить
+              </button>
+            )}
+          </div>
+
           <Textarea
+            ref={textareaRef}
             rows={8}
             placeholder={`Вставьте ваши карточки сюда...\n\nПример:\nsudo, Выполняет команду с правами администратора\npwd, Показывает текущую рабочую директорию\nls, Показывает содержимое директории`}
             value={rawText}
@@ -210,7 +275,21 @@ touch, Создаёт пустой файл`;
               </span>
             </div>
 
-            <div className="overflow-x-auto">
+            {/* Карточный вид для мобильных */}
+            <div className="sm:hidden space-y-2.5">
+              {parsedCards.map((card, idx) => (
+                <div key={idx} className="p-3 rounded-[12px] bg-[var(--surface-2)]/60 border border-[var(--line)] text-sm">
+                  <div className="flex items-center justify-between text-xs text-[var(--muted)] mb-1">
+                    <span>Карточка #{idx + 1}</span>
+                  </div>
+                  <div className="font-bold text-[var(--ink)] mb-1 break-words">{card.term}</div>
+                  <div className="text-[var(--body)] text-xs leading-relaxed break-words">{card.definition}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Табличный вид для планшетов и десктопов */}
+            <div className="hidden sm:block overflow-x-auto">
               <table className="w-full text-left text-sm border-collapse">
                 <thead>
                   <tr className="border-b border-[var(--line)] text-[var(--muted)] text-xs uppercase font-semibold">

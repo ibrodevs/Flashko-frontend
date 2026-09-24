@@ -7,6 +7,7 @@ export interface FlashcardProps {
   index?: number;
   term: string;
   definition: string;
+  hasMistake?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
   className?: string;
@@ -16,6 +17,7 @@ export function Flashcard({
   index,
   term,
   definition,
+  hasMistake,
   onEdit,
   onDelete,
   className = '',
@@ -31,14 +33,22 @@ export function Flashcard({
           </span>
         )}
         <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-          <div className="text-[17px] font-bold text-[var(--ink)] break-words">
-            {term}
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-[17px] font-bold text-[var(--ink)] break-words">
+              {term}
+            </span>
+            {hasMistake && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[var(--red-bg)] text-[var(--red-strong)] border border-[var(--red-strong)]/20">
+                Была ошибка
+              </span>
+            )}
           </div>
           <div className="text-[14.5px] text-[var(--body)] whitespace-pre-wrap break-words leading-relaxed">
             {definition}
           </div>
         </div>
       </div>
+
 
       {(onEdit || onDelete) && (
         <div className="flex items-center gap-1.5 self-end md:self-start shrink-0">

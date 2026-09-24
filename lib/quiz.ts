@@ -25,7 +25,12 @@ export const quiz = {
     return api.post<QuizSessionDetail>(`/api/quiz/${sessionId}/finish/`);
   },
 
-  async getById(sessionId: number | string): Promise<QuizSessionDetail> {
-    return api.get<QuizSessionDetail>(`/api/quiz/${sessionId}/`);
+  async getById(sessionId: number | string): Promise<QuizStartResponse & QuizSessionDetail> {
+    return api.get<QuizStartResponse & QuizSessionDetail>(`/api/quiz/${sessionId}/`);
+  },
+
+  async discard(sessionId: number | string): Promise<{ detail: string }> {
+    return api.post<{ detail: string }>(`/api/quiz/${sessionId}/discard/`);
   },
 };
+
