@@ -37,7 +37,7 @@ export default function DashboardPage() {
         const data = await setsApi.getAll();
         setSets(data);
       } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : 'Failed to load flashcard sets.';
+        const msg = err instanceof Error ? err.message : 'Не удалось загрузить наборы карточек.';
         setError(msg);
       } finally {
         setLoading(false);
@@ -50,7 +50,7 @@ export default function DashboardPage() {
   }, [user]);
 
   if (!initialized || (loading && sets.length === 0)) {
-    return <Loading fullPage text="Loading your flashcards..." />;
+    return <Loading fullPage text="Загрузка ваших наборов..." />;
   }
 
   if (!user) {
@@ -59,34 +59,34 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 w-full flex-1 flex flex-col">
-      {/* Dashboard Topbar */}
+      {/* Шапка дашборда */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[var(--line)]">
         <div>
           <h1 className="text-[26px] sm:text-[32px] font-bold text-[var(--ink)] tracking-tight">
-            My Flashcards
+            Мои карточки
           </h1>
           <p className="text-[14px] text-[var(--muted)] mt-1">
-            Manage your flashcard sets and study quizzes
+            Управляйте наборами flash-карточек и проходите тесты
           </p>
         </div>
 
         <Link href="/sets/create">
           <Button variant="primary" size="md" icon={<Plus className="w-4 h-4" />}>
-            Create Set
+            Создать набор
           </Button>
         </Link>
       </div>
 
       {error && <ErrorMessage message={error} className="mt-6" />}
 
-      {/* Sets Grid or Empty State */}
+      {/* Сетка наборов или Empty State */}
       <div className="mt-8 flex-1">
         {sets.length === 0 ? (
           <EmptyState
             icon={<Layers className="w-6 h-6 text-[var(--blue)]" />}
-            title="You don't have any flashcard sets yet."
-            description="Create your first set by pasting terms and definitions to start studying."
-            actionText="Create Set"
+            title="У вас пока нет наборов карточек."
+            description="Создайте свой первый набор, вставив термины и определения, чтобы сразу начать обучение."
+            actionText="Создать набор"
             actionHref="/sets/create"
           />
         ) : (

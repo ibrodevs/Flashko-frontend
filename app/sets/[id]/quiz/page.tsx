@@ -71,7 +71,7 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
       setTotalQuestions(res.total_questions);
       setCurrentQuestion(res.question);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to start quiz.';
+      const msg = err instanceof Error ? err.message : 'Не удалось начать тест.';
       setError(msg);
     } finally {
       setLoading(false);
@@ -103,7 +103,7 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
           }
         } catch (err: unknown) {
           if (!ignore) {
-            const msg = err instanceof Error ? err.message : 'Failed to start quiz.';
+            const msg = err instanceof Error ? err.message : 'Не удалось начать тест.';
             setError(msg);
             setLoading(false);
           }
@@ -131,7 +131,7 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
       setIncorrectCount(result.incorrect_count);
       setCachedNextQuestion(result.next_question);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to submit answer.';
+      const msg = err instanceof Error ? err.message : 'Не удалось отправить ответ.';
       setError(msg);
       setSelectedOptionId(null);
     } finally {
@@ -207,7 +207,7 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
   }, [currentQuestion, answerResult, selectedOptionId, submittingAnswer, isFinished, handleNext, handleSelectOption]);
 
   if (!initialized || loading) {
-    return <Loading fullPage text="Preparing quiz session..." />;
+    return <Loading fullPage text="Подготовка тестирования..." />;
   }
 
   if (error) {
@@ -217,11 +217,11 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
         <div className="flex items-center justify-center gap-3">
           <Link href={`/sets/${setId}`}>
             <Button variant="secondary" size="md" icon={<ArrowLeft className="w-4 h-4" />}>
-              Back to Set
+              Назад к набору
             </Button>
           </Link>
           <Button variant="primary" size="md" onClick={() => initQuiz(false)}>
-            Try Again
+            Попробовать снова
           </Button>
         </div>
       </div>
@@ -260,7 +260,7 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
             className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Exit Quiz
+            Выйти из теста
           </Link>
 
           <span className="text-xs sm:text-sm font-bold text-[var(--ink)] line-clamp-1 max-w-[200px] text-right">
@@ -281,7 +281,7 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
         {/* Question Area */}
         <div className="card card-pad mb-6 bg-[var(--surface)] text-center sm:text-left">
           <span className="text-xs font-bold text-[var(--muted)] uppercase tracking-wider block mb-2">
-            Question {currentQuestion.question_number}
+            Вопрос {currentQuestion.question_number} из {totalQuestions}
           </span>
           <h2 className="text-[22px] sm:text-[26px] font-bold text-[var(--ink)] tracking-tight leading-snug">
             {currentQuestion.question}
@@ -324,7 +324,7 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
                   </div>
                   <div>
                     <div className="text-[15px] font-bold text-[var(--green)]">
-                      Correct!
+                      Правильно!
                     </div>
                   </div>
                 </>
@@ -335,10 +335,10 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
                   </div>
                   <div className="text-left">
                     <div className="text-[15px] font-bold text-[var(--red-strong)]">
-                      Incorrect
+                      Неправильно
                     </div>
                     <div className="text-xs text-[var(--muted)]">
-                      Correct answer: <span className="font-semibold text-[var(--ink)]">{answerResult.correct_text}</span>
+                      Правильный ответ: <span className="font-semibold text-[var(--ink)]">{answerResult.correct_text}</span>
                     </div>
                   </div>
                 </>
@@ -352,7 +352,7 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
               icon={<ArrowRight className="w-4 h-4" />}
               className="sm:self-center"
             >
-              {currentQuestion.question_number >= totalQuestions ? 'View Results' : 'Next Question'}
+              {currentQuestion.question_number >= totalQuestions ? 'Посмотреть результаты' : 'Следующий вопрос'}
             </Button>
           </div>
         )}
@@ -361,9 +361,9 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
       {/* Keyboard Shortcut Hint for Desktop */}
       <div className="mt-8 text-center text-xs text-[var(--muted)]/70 hidden sm:block">
         {!answerResult ? (
-          <span>Tip: Press <kbd className="px-1.5 py-0.5 rounded bg-[var(--surface-2)] border border-[var(--line)] text-[var(--ink)] font-mono">1</kbd> - <kbd className="px-1.5 py-0.5 rounded bg-[var(--surface-2)] border border-[var(--line)] text-[var(--ink)] font-mono">4</kbd> on your keyboard to select an answer</span>
+          <span>Подсказка: нажимайте клавиши <kbd className="px-1.5 py-0.5 rounded bg-[var(--surface-2)] border border-[var(--line)] text-[var(--ink)] font-mono">1</kbd>–<kbd className="px-1.5 py-0.5 rounded bg-[var(--surface-2)] border border-[var(--line)] text-[var(--ink)] font-mono">4</kbd> на клавиатуре для выбора ответа</span>
         ) : (
-          <span>Tip: Press <kbd className="px-1.5 py-0.5 rounded bg-[var(--surface-2)] border border-[var(--line)] text-[var(--ink)] font-mono">Enter</kbd> or <kbd className="px-1.5 py-0.5 rounded bg-[var(--surface-2)] border border-[var(--line)] text-[var(--ink)] font-mono">Space</kbd> for the next question</span>
+          <span>Подсказка: нажмите <kbd className="px-1.5 py-0.5 rounded bg-[var(--surface-2)] border border-[var(--line)] text-[var(--ink)] font-mono">Enter</kbd> или <kbd className="px-1.5 py-0.5 rounded bg-[var(--surface-2)] border border-[var(--line)] text-[var(--ink)] font-mono">Пробел</kbd> для следующего вопроса</span>
         )}
       </div>
     </div>

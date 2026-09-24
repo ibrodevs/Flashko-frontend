@@ -21,7 +21,7 @@ export function ProgressBar({
     <div className="w-full flex flex-col gap-2">
       <div className="flex items-center justify-between text-sm">
         <span className="font-semibold text-[var(--ink)]">
-          Question {current} of {total}
+          Вопрос {current} из {total}
         </span>
         <div className="flex items-center gap-3 font-semibold text-xs">
           <span className="text-[var(--green)] flex items-center gap-1">

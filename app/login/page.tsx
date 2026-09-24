@@ -30,10 +30,10 @@ export default function LoginPage() {
 
     const errors: { [key: string]: string } = {};
     if (!identifier.trim()) {
-      errors.username_or_email = 'Email or username is required.';
+      errors.username_or_email = 'Email или имя пользователя обязательно.';
     }
     if (!password) {
-      errors.password = 'Password is required.';
+      errors.password = 'Пароль обязателен.';
     }
 
     if (Object.keys(errors).length > 0) {
@@ -59,9 +59,9 @@ export default function LoginPage() {
           setGeneralError(backendErrors.non_field_errors || backendErrors.detail);
         }
       } else if (err instanceof Error) {
-        setGeneralError(err.message || 'Login failed. Please check your credentials.');
+        setGeneralError(err.message || 'Ошибка входа. Проверьте правильность введённых данных.');
       } else {
-        setGeneralError('Login failed. Please check your credentials.');
+        setGeneralError('Ошибка входа. Проверьте правильность введённых данных.');
       }
     } finally {
       setSubmitting(false);
@@ -73,10 +73,10 @@ export default function LoginPage() {
       <div className="card card-pad w-full max-w-[440px] shadow-[var(--shadow-pop)]">
         <div className="text-center mb-6">
           <h1 className="text-[26px] sm:text-[28px] font-bold text-[var(--ink)] tracking-tight">
-            Welcome back
+            С возвращением
           </h1>
           <p className="text-[14px] text-[var(--muted)] mt-1">
-            Log in to your Flashcards account
+            Войдите в свой аккаунт Flashcards
           </p>
         </div>
 
@@ -84,8 +84,8 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
-            label="Email or username"
-            placeholder="Enter email or username"
+            label="Email или имя пользователя"
+            placeholder="Введите email или имя пользователя"
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
             error={fieldErrors.username_or_email}
@@ -94,9 +94,9 @@ export default function LoginPage() {
           />
 
           <Input
-            label="Password"
+            label="Пароль"
             type="password"
-            placeholder="Enter password"
+            placeholder="Введите пароль"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             error={fieldErrors.password}
@@ -112,15 +112,15 @@ export default function LoginPage() {
               fullWidth
               loading={submitting}
             >
-              Log in
+              Войти
             </Button>
           </div>
         </form>
 
         <div className="mt-6 pt-5 border-t border-[var(--line)] text-center text-[14px] text-[var(--muted)]">
-          Don&apos;t have an account?{' '}
+          Нет аккаунта?{' '}
           <Link href="/register" className="text-[var(--blue)] font-semibold hover:underline">
-            Sign up
+            Зарегистрироваться
           </Link>
         </div>
       </div>

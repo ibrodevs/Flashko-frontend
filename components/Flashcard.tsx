@@ -45,7 +45,7 @@ export function Flashcard({
           {onEdit && (
             <button
               onClick={onEdit}
-              aria-label="Edit card"
+              aria-label="Редактировать карточку"
               className="w-8 h-8 rounded-[9px] flex items-center justify-center text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--hover)] transition-colors"
             >
               <Edit2 className="w-4 h-4" />
@@ -54,7 +54,7 @@ export function Flashcard({
           {onDelete && (
             <button
               onClick={onDelete}
-              aria-label="Delete card"
+              aria-label="Удалить карточку"
               className="w-8 h-8 rounded-[9px] flex items-center justify-center text-[var(--muted)] hover:text-[var(--red-strong)] hover:bg-[var(--red-bg)] transition-colors"
             >
               <Trash2 className="w-4 h-4" />

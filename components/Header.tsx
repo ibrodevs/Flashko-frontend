@@ -45,7 +45,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 w-full h-16 bg-[var(--surface)]/90 backdrop-blur-md border-b border-[var(--line)]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
-        {/* Logo */}
+        {/* Логотип */}
         <Link
           href={user ? '/dashboard' : '/'}
           className="flex items-center gap-2.5 font-bold text-[19px] sm:text-[21px] text-[var(--ink)] tracking-tight hover:opacity-90 transition-opacity"
@@ -56,12 +56,12 @@ export function Header() {
           <span>Flashcards</span>
         </Link>
 
-        {/* Right side navigation & controls */}
+        {/* Навигация и контролы */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Theme toggle */}
+          {/* Переключатель темы */}
           <button
             onClick={toggleTheme}
-            aria-label="Toggle theme"
+            aria-label="Переключить тему"
             className="w-9 h-9 rounded-[10px] border border-[var(--field-line)] bg-[var(--surface)] flex items-center justify-center text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--hover)] transition-colors"
           >
             {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
@@ -71,7 +71,7 @@ export function Header() {
             <div className="w-24 h-9 rounded-[10px] bg-[var(--hover)] animate-pulse" />
           ) : user ? (
             <>
-              {/* Authenticated user menu */}
+              {/* Меню авторизованного пользователя */}
               <Link
                 href="/dashboard"
                 className={`hidden sm:inline-flex px-3 py-1.5 rounded-[10px] text-[14px] font-medium transition-colors ${
@@ -80,7 +80,7 @@ export function Header() {
                     : 'text-[var(--body)] hover:bg-[var(--hover)]'
                 }`}
               >
-                Dashboard
+                Мои наборы
               </Link>
               
               <Link
@@ -93,7 +93,7 @@ export function Header() {
               >
                 <UserIcon className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">{user.username}</span>
-                <span className="sm:hidden">Profile</span>
+                <span className="sm:hidden">Профиль</span>
               </Link>
 
               <Button
@@ -103,20 +103,20 @@ export function Header() {
                 icon={<LogOut className="w-3.5 h-3.5" />}
                 className="text-[var(--muted)] hover:text-[var(--red-strong)]"
               >
-                <span className="hidden sm:inline">Logout</span>
+                <span className="hidden sm:inline">Выйти</span>
               </Button>
             </>
           ) : (
             <>
-              {/* Guest links */}
+              {/* Гостевые ссылки */}
               <Link href="/login">
                 <Button variant="ghost" size="sm">
-                  Log in
+                  Войти
                 </Button>
               </Link>
               <Link href="/register">
                 <Button variant="primary" size="sm">
-                  Sign up
+                  Регистрация
                 </Button>
               </Link>
             </>

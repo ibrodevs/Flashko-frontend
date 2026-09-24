@@ -9,15 +9,15 @@ export default function NotFound() {
         <AlertCircle className="w-8 h-8 text-[var(--blue)]" />
       </div>
       <h1 className="text-[32px] font-extrabold text-[var(--ink)] tracking-tight">
-        404 — Page Not Found
+        404 — Страница не найдена
       </h1>
       <p className="text-[15px] text-[var(--muted)] mt-2 max-w-sm">
-        The page you are looking for does not exist or may have been moved.
+        Запрашиваемая страница не существует или была перемещена.
       </p>
       <div className="mt-6">
         <Link href="/">
           <Button variant="primary" size="md" icon={<ArrowLeft className="w-4 h-4" />}>
-            Back to Home
+            На главную
           </Button>
         </Link>
       </div>

@@ -47,11 +47,11 @@ export default function EditSetPage({ params }: { params: Promise<{ id: string }
         setCards(data.cards.map((c) => ({ id: c.id, term: c.term, definition: c.definition })));
       } catch (err: unknown) {
         if (err instanceof ApiError && err.status === 404) {
-          setError('Set not found.');
+          setError('Набор не найден.');
         } else if (err instanceof Error) {
           setError(err.message);
         } else {
-          setError('Failed to load set.');
+          setError('Не удалось загрузить набор.');
         }
       } finally {
         setLoading(false);
@@ -83,14 +83,14 @@ export default function EditSetPage({ params }: { params: Promise<{ id: string }
     setError('');
 
     if (!title.trim()) {
-      setError('Title cannot be empty.');
+      setError('Название набора не может быть пустым.');
       return;
     }
 
     // Check that all cards have non-empty term and definition
     for (let i = 0; i < cards.length; i++) {
       if (!cards[i].term.trim() || !cards[i].definition.trim()) {
-        setError(`Card #${i + 1} has an empty term or definition.`);
+        setError(`У карточки #${i + 1} не заполнено слово или определение.`);
         return;
       }
     }
@@ -108,7 +108,7 @@ export default function EditSetPage({ params }: { params: Promise<{ id: string }
       });
       router.push(`/sets/${setId}`);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to save changes.';
+      const msg = err instanceof Error ? err.message : 'Не удалось сохранить изменения.';
       setError(msg);
     } finally {
       setSaving(false);
@@ -116,7 +116,7 @@ export default function EditSetPage({ params }: { params: Promise<{ id: string }
   };
 
   if (!initialized || loading) {
-    return <Loading fullPage text="Loading set for editing..." />;
+    return <Loading fullPage text="Загрузка набора для редактирования..." />;
   }
 
   return (
@@ -128,17 +128,17 @@ export default function EditSetPage({ params }: { params: Promise<{ id: string }
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Set
+          Назад к набору
         </Link>
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-[26px] sm:text-[32px] font-bold text-[var(--ink)] tracking-tight">
-            Edit Set
+            Редактирование набора
           </h1>
           <p className="text-[14px] text-[var(--muted)] mt-1">
-            Update set title, description, or modify flashcards
+            Измените название, описание или карточки набора
           </p>
         </div>
       </div>
@@ -149,7 +149,7 @@ export default function EditSetPage({ params }: { params: Promise<{ id: string }
         {/* Set Info Card */}
         <div className="card card-pad space-y-4">
           <Input
-            label="Title"
+            label="Название"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             disabled={saving}
@@ -157,7 +157,7 @@ export default function EditSetPage({ params }: { params: Promise<{ id: string }
           />
 
           <Input
-            label="Description (optional)"
+            label="Описание (необязательно)"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             disabled={saving}
@@ -168,7 +168,7 @@ export default function EditSetPage({ params }: { params: Promise<{ id: string }
         <div className="space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-[var(--line)]">
             <h2 className="text-[20px] font-bold text-[var(--ink)]">
-              Cards ({cards.length})
+              Карточки ({cards.length})
             </h2>
             <Button
               type="button"
@@ -177,13 +177,13 @@ export default function EditSetPage({ params }: { params: Promise<{ id: string }
               onClick={handleAddCard}
               icon={<Plus className="w-4 h-4" />}
             >
-              Add Card
+              Добавить карточку
             </Button>
           </div>
 
           {cards.length === 0 ? (
             <div className="card card-pad text-center py-8 text-[var(--muted)] border-dashed border-2">
-              No cards in this set yet. Click &ldquo;Add Card&rdquo; above.
+              В этом наборе пока нет карточек. Нажмите &laquo;Добавить карточку&raquo; выше.
             </div>
           ) : (
             <div className="space-y-4">
@@ -198,20 +198,20 @@ export default function EditSetPage({ params }: { params: Promise<{ id: string }
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 w-full">
                     <Input
-                      label="Term"
+                      label="Слово / Термин"
                       value={card.term}
                       onChange={(e) => handleCardChange(idx, 'term', e.target.value)}
-                      placeholder="e.g. pwd"
+                      placeholder="например: cat"
                       disabled={saving}
                       required
                     />
 
                     <Textarea
-                      label="Definition"
+                      label="Определение"
                       rows={2}
                       value={card.definition}
                       onChange={(e) => handleCardChange(idx, 'definition', e.target.value)}
-                      placeholder="e.g. Prints current working directory"
+                      placeholder="например: кот, кошка"
                       disabled={saving}
                       required
                     />
@@ -220,7 +220,7 @@ export default function EditSetPage({ params }: { params: Promise<{ id: string }
                   <button
                     type="button"
                     onClick={() => handleDeleteCard(idx)}
-                    aria-label="Remove card"
+                    aria-label="Удалить карточку"
                     className="self-end md:self-center w-9 h-9 rounded-[9px] flex items-center justify-center text-[var(--muted)] hover:text-[var(--red-strong)] hover:bg-[var(--red-bg)] transition-colors shrink-0"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -239,7 +239,7 @@ export default function EditSetPage({ params }: { params: Promise<{ id: string }
               onClick={handleAddCard}
               icon={<Plus className="w-4 h-4" />}
             >
-              + Add Another Card
+              + Добавить ещё карточку
             </Button>
           </div>
         </div>
@@ -248,7 +248,7 @@ export default function EditSetPage({ params }: { params: Promise<{ id: string }
         <div className="flex items-center justify-end gap-3 pt-6 border-t border-[var(--line)]">
           <Link href={`/sets/${setId}`}>
             <Button variant="ghost" size="md">
-              Cancel
+              Отмена
             </Button>
           </Link>
           <Button
@@ -258,7 +258,7 @@ export default function EditSetPage({ params }: { params: Promise<{ id: string }
             loading={saving}
             icon={<Save className="w-4 h-4" />}
           >
-            Save Changes
+            Сохранить изменения
           </Button>
         </div>
       </form>

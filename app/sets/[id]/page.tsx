@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { sets as setsApi } from '@/lib/sets';
 import { FlashcardSetDetail } from '@/types';
+import { pluralize, formatDateRu } from '@/lib/format';
 import {
   Button,
   Modal,
@@ -52,11 +53,11 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
         setSetDetail(data);
       } catch (err: unknown) {
         if (err instanceof ApiError && err.status === 404) {
-          setError('Set not found.');
+          setError('Набор не найден.');
         } else if (err instanceof Error) {
           setError(err.message);
         } else {
-          setError('Failed to load set.');
+          setError('Не удалось загрузить набор.');
         }
       } finally {
         setLoading(false);
@@ -74,7 +75,7 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
       await setsApi.delete(setId);
       router.push('/dashboard');
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to delete set.';
+      const msg = err instanceof Error ? err.message : 'Не удалось удалить набор.';
       setError(msg);
       setDeleteModalOpen(false);
     } finally {
@@ -83,7 +84,7 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
   };
 
   if (!initialized || (loading && !setDetail)) {
-    return <Loading fullPage text="Loading set details..." />;
+    return <Loading fullPage text="Загрузка набора..." />;
   }
 
   if (error) {
@@ -92,7 +93,7 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
         <ErrorMessage message={error} className="max-w-md mx-auto mb-6" />
         <Link href="/dashboard">
           <Button variant="secondary" size="md" icon={<ArrowLeft className="w-4 h-4" />}>
-            Back to Dashboard
+            Назад к наборам
           </Button>
         </Link>
       </div>
@@ -101,13 +102,9 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
 
   if (!setDetail) return null;
 
-  const formattedDate = new Date(setDetail.created_at).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-
+  const formattedDate = formatDateRu(setDetail.created_at);
   const canStartQuiz = setDetail.cards.length >= 4;
+  const remainingCards = 4 - setDetail.cards.length;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10 w-full flex-1">
@@ -118,7 +115,7 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Dashboard
+          Назад к наборам
         </Link>
       </div>
 
@@ -138,11 +135,11 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
             <div className="flex flex-wrap items-center gap-4 mt-4 text-[13.5px] text-[var(--muted)] font-medium">
               <span className="flex items-center gap-1.5 text-[var(--ink)] font-semibold">
                 <BookOpen className="w-4 h-4 text-[var(--blue)]" />
-                {setDetail.cards.length} {setDetail.cards.length === 1 ? 'card' : 'cards'}
+                {setDetail.cards.length} {pluralize(setDetail.cards.length, 'карточка', 'карточки', 'карточек')}
               </span>
               <span className="flex items-center gap-1.5">
                 <Calendar className="w-4 h-4" />
-                Created {formattedDate}
+                Создан {formattedDate}
               </span>
             </div>
           </div>
@@ -156,13 +153,13 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
                 disabled={!canStartQuiz}
                 icon={<Play className="w-4 h-4 fill-current" />}
               >
-                Start Quiz
+                Начать тест
               </Button>
             </Link>
 
             <Link href={`/sets/${setId}/edit`}>
               <Button variant="secondary" size="md" icon={<Edit2 className="w-3.5 h-3.5" />}>
-                Edit
+                Редактировать
               </Button>
             </Link>
 
@@ -173,7 +170,7 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
               icon={<Trash2 className="w-4 h-4" />}
               className="text-[var(--red-strong)] hover:bg-[var(--red-bg)]"
             >
-              Delete
+              Удалить
             </Button>
           </div>
         </div>
@@ -181,7 +178,9 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
         {!canStartQuiz && (
           <div className="p-3.5 rounded-[12px] bg-[var(--amber-bg)] text-[var(--amber)] text-xs font-semibold flex items-center gap-2 border border-[var(--amber)]/20">
             <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>You need at least 4 flashcards to start a quiz. Add {4 - setDetail.cards.length} more cards to enable the quiz.</span>
+            <span>
+              Для запуска теста требуется минимум 4 карточки. Добавьте ещё {remainingCards} {pluralize(remainingCards, 'карточку', 'карточки', 'карточек')}, чтобы начать тест.
+            </span>
           </div>
         )}
       </div>
@@ -190,7 +189,7 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
       <div className="space-y-4">
         <div className="flex items-center justify-between pb-2 border-b border-[var(--line)]">
           <h2 className="text-[20px] font-bold text-[var(--ink)]">
-            Flashcards ({setDetail.cards.length})
+            Карточки ({setDetail.cards.length})
           </h2>
         </div>
 
@@ -210,8 +209,8 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
       <Modal
         isOpen={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
-        title="Delete this set?"
-        description="All flashcards in this set will also be permanently deleted. This action cannot be undone."
+        title="Удалить этот набор?"
+        description="Все карточки в этом наборе будут удалены безвозвратно. Это действие нельзя отменить."
       >
         <div className="flex items-center justify-end gap-3 mt-6">
           <Button
@@ -220,7 +219,7 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
             onClick={() => setDeleteModalOpen(false)}
             disabled={deleting}
           >
-            Cancel
+            Отмена
           </Button>
           <Button
             variant="danger"
@@ -228,7 +227,7 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
             onClick={handleDelete}
             loading={deleting}
           >
-            Delete
+            Удалить
           </Button>
         </div>
       </Modal>

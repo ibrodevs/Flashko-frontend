@@ -19,64 +19,64 @@ export default function LandingPage() {
   }, [initialized, user, router]);
 
   const demoOptions = [
-    { id: 'a', text: 'Lists directory contents' },
-    { id: 'b', text: 'Prints the current working directory' },
-    { id: 'c', text: 'Creates a new empty folder' },
-    { id: 'd', text: 'Changes file permissions' },
+    { id: 'a', text: 'Показывает содержимое директории' },
+    { id: 'b', text: 'Показывает текущую рабочую директорию' },
+    { id: 'c', text: 'Создаёт новую пустую директорию' },
+    { id: 'd', text: 'Изменяет права доступа к файлам' },
   ];
 
   return (
     <div className="flex-1 flex flex-col justify-between">
-      {/* Hero Section */}
+      {/* Главный блок Hero */}
       <section className="relative px-4 sm:px-6 pt-16 pb-20 max-w-5xl mx-auto w-full text-center">
-        {/* Subtle badge */}
+        {/* Бейдж */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--blue-soft)] text-[var(--blue-soft-text)] text-[13px] font-semibold mb-6">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Simple, fast flashcards & quizzes</span>
+          <span>Простые и быстрые flash-карточки и тесты</span>
         </div>
 
-        {/* Headline */}
+        {/* Заголовок */}
         <h1 className="text-[36px] sm:text-[52px] font-extrabold text-[var(--ink)] tracking-tight leading-[1.15] max-w-3xl mx-auto">
-          Learn anything with <span className="text-[var(--blue)]">simple flashcards</span>.
+          Изучайте что угодно с помощью <span className="text-[var(--blue)]">простых карточек</span>.
         </h1>
 
-        {/* Subtitle */}
+        {/* Описание */}
         <p className="mt-5 text-[17px] sm:text-[19px] text-[var(--muted)] max-w-2xl mx-auto leading-relaxed">
-          Create your own flashcard sets in seconds, practice with multiple-choice quizzes, and track your progress effortlessly.
+          Создавайте свои наборы карточек за считанные секунды, тренируйтесь в режиме тестов с выбором ответа и закрепляйте знания легко.
         </p>
 
-        {/* CTA Buttons */}
+        {/* Кнопки действия */}
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
           <Link href="/register">
             <Button variant="primary" size="lg" icon={<ArrowRight className="w-4 h-4" />}>
-              Get Started — It&apos;s Free
+              Начать бесплатно
             </Button>
           </Link>
           <Link href="/login">
             <Button variant="secondary" size="lg">
-              Log in
+              Войти
             </Button>
           </Link>
         </div>
 
-        {/* Interactive Demo Quiz Preview */}
+        {/* Интерактивный пример */}
         <div className="mt-16 max-w-xl mx-auto text-left">
           <div className="text-xs font-bold text-[var(--muted)] uppercase tracking-wider mb-2.5 text-center">
-            Interactive Preview
+            Интерактивный пример
           </div>
 
           <div className="card card-pad bg-[var(--surface)] border border-[var(--line)] shadow-[var(--shadow-pop)] relative overflow-hidden">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)] text-xs font-semibold text-[var(--muted)]">
               <span className="flex items-center gap-1.5 text-[var(--ink)]">
                 <BookOpen className="w-3.5 h-3.5 text-[var(--blue)]" />
-                Bash Commands
+                Команды Bash
               </span>
-              <span>Question 1 of 12</span>
+              <span>Вопрос 1 из 12</span>
             </div>
 
             <div className="mt-4">
               <h2 className="text-[19px] font-bold text-[var(--ink)] tracking-tight">
-                What does &ldquo;pwd&rdquo; mean?
+                Что означает &laquo;pwd&raquo;?
               </h2>
             </div>
 
@@ -120,10 +120,10 @@ export default function LandingPage() {
             {selectedDemoOption && (
               <div className="mt-4 pt-3 border-t border-[var(--line)] flex items-center justify-between text-xs font-semibold">
                 <span className={selectedDemoOption === 'b' ? 'text-[var(--green)] flex items-center gap-1' : 'text-[var(--red-strong)] flex items-center gap-1'}>
-                  {selectedDemoOption === 'b' ? '✓ Correct! Good job.' : '✕ Incorrect. Correct answer: B.'}
+                  {selectedDemoOption === 'b' ? '✓ Правильно! Отличная работа.' : '✕ Неправильно. Правильный ответ: B.'}
                 </span>
                 <span className="text-[var(--blue)] flex items-center gap-1">
-                  Ready to try more? <CheckCircle2 className="w-3.5 h-3.5" />
+                  Хотите создать свои? <CheckCircle2 className="w-3.5 h-3.5" />
                 </span>
               </div>
             )}
@@ -131,9 +131,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* Подвал */}
       <footer className="w-full py-6 border-t border-[var(--line)] text-center text-xs text-[var(--muted)]">
-        Flashcards Quiz Web App &copy; {new Date().getFullYear()}. Fast &amp; simple studying.
+        Flashcards Quiz Web App &copy; {new Date().getFullYear()}. Простое и быстрое обучение.
       </footer>
     </div>
   );

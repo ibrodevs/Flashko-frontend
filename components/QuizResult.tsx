@@ -38,12 +38,12 @@ export function QuizResult({
       )}
 
       <h2 className="text-[26px] sm:text-[30px] font-bold text-[var(--ink)] tracking-tight">
-        {isPerfect ? 'Perfect!' : 'Study Complete!'}
+        {isPerfect ? 'Отлично!' : 'Тест завершён!'}
       </h2>
       <p className="text-[15px] text-[var(--muted)] mt-1.5">
         {isPerfect
-          ? 'You answered all questions correctly.'
-          : 'Good practice! Review your performance below.'}
+          ? 'Вы ответили правильно на все вопросы.'
+          : 'Хорошая тренировка! Посмотрите ваши результаты ниже.'}
       </p>
 
       {/* Score Big Display */}
@@ -58,11 +58,11 @@ export function QuizResult({
         <div className="flex items-center justify-center gap-6 mt-5 pt-4 border-t border-[var(--line)] text-sm font-semibold">
           <span className="flex items-center gap-1.5 text-[var(--green)]">
             <CheckCircle2 className="w-4 h-4" />
-            {correctAnswers} Correct
+            {correctAnswers} верно
           </span>
           <span className="flex items-center gap-1.5 text-[var(--red-strong)]">
             <XCircle className="w-4 h-4" />
-            {incorrectAnswers} Incorrect
+            {incorrectAnswers} с ошибкой
           </span>
         </div>
       </div>
@@ -77,7 +77,7 @@ export function QuizResult({
             onClick={onReviewMistakes}
             icon={<AlertCircle className="w-4 h-4" />}
           >
-            Review Mistakes ({incorrectAnswers})
+            Повторить ошибки ({incorrectAnswers})
           </Button>
         )}
 
@@ -88,12 +88,12 @@ export function QuizResult({
           onClick={onStudyAgain}
           icon={<RotateCcw className="w-4 h-4" />}
         >
-          Study Again
+          Пройти снова
         </Button>
 
         <Link href={`/sets/${setId}`} className="w-full">
           <Button variant="ghost" size="md" fullWidth icon={<ArrowLeft className="w-4 h-4" />}>
-            Back to Set
+            Вернуться к набору
           </Button>
         </Link>
       </div>

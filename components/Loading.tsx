@@ -8,7 +8,7 @@ export interface LoadingProps {
   fullPage?: boolean;
 }
 
-export function Loading({ text = 'Loading...', fullPage = false }: LoadingProps) {
+export function Loading({ text = 'Загрузка...', fullPage = false }: LoadingProps) {
   if (fullPage) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3">

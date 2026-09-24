@@ -63,7 +63,7 @@ export class ApiError extends Error {
   data: unknown;
 
   constructor(status: number, data: unknown) {
-    let message = 'An error occurred';
+    let message = 'Произошла ошибка';
     if (typeof data === 'string') {
       message = data;
     } else if (data && typeof data === 'object') {
@@ -117,7 +117,7 @@ export async function request<T = unknown>(endpoint: string, options: RequestOpt
       credentials: 'include', // Includes HttpOnly refresh token cookie
     });
   } catch (err: unknown) {
-    const errorMsg = err instanceof Error ? err.message : 'Network error. Please check your connection.';
+    const errorMsg = err instanceof Error ? err.message : 'Ошибка сети. Проверьте подключение к интернету.';
     throw new ApiError(0, errorMsg);
   }
 
@@ -163,7 +163,7 @@ export async function request<T = unknown>(endpoint: string, options: RequestOpt
           if (newToken) {
             resolve(request<T>(endpoint, { ...options, retry: false }));
           } else {
-            reject(new ApiError(401, 'Session expired. Please log in again.'));
+            reject(new ApiError(401, 'Сессия истекла. Пожалуйста, войдите снова.'));
           }
         });
       });

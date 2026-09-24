@@ -5,18 +5,15 @@ import Link from 'next/link';
 import { FlashcardSet } from '@/types';
 import { Button } from './Button';
 import { BookOpen, Calendar } from 'lucide-react';
+import { pluralize, formatDateRu } from '@/lib/format';
 
 export interface FlashcardSetCardProps {
   set: FlashcardSet;
 }
 
 export function FlashcardSetCard({ set }: FlashcardSetCardProps) {
-  // Format date nicely: e.g. "Sep 24, 2026"
-  const formattedDate = new Date(set.created_at).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
+  const formattedDate = formatDateRu(set.created_at);
+  const cardsText = pluralize(set.cards_count, 'карточка', 'карточки', 'карточек');
 
   return (
     <div className="card card-pad flex flex-col justify-between h-full transition-all hover:border-[var(--line-strong)] hover:shadow-[var(--shadow-pop)] group">
@@ -33,7 +30,7 @@ export function FlashcardSetCard({ set }: FlashcardSetCardProps) {
           </p>
         ) : (
           <p className="text-[14px] text-[var(--muted)]/60 italic mt-1.5">
-            No description
+            Без описания
           </p>
         )}
       </div>
@@ -42,17 +39,17 @@ export function FlashcardSetCard({ set }: FlashcardSetCardProps) {
         <div className="flex flex-col gap-1 text-[13px] text-[var(--muted)]">
           <span className="font-semibold text-[var(--ink)] flex items-center gap-1.5">
             <BookOpen className="w-3.5 h-3.5 text-[var(--blue)]" />
-            {set.cards_count} {set.cards_count === 1 ? 'card' : 'cards'}
+            {cardsText}
           </span>
           <span className="flex items-center gap-1.5 text-xs text-[var(--muted)]">
             <Calendar className="w-3 h-3" />
-            {formattedDate}
+            Создан {formattedDate}
           </span>
         </div>
 
         <Link href={`/sets/${set.id}`}>
           <Button variant="secondary" size="sm">
-            Study
+            Учить
           </Button>
         </Link>
       </div>

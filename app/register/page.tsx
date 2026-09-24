@@ -31,23 +31,23 @@ export default function RegisterPage() {
     setFieldErrors({});
     setGeneralError('');
 
-    // Frontend validation
+    // Frontend валидация
     const errors: { [key: string]: string } = {};
     if (!username.trim()) {
-      errors.username = 'Username is required.';
+      errors.username = 'Имя пользователя обязательно.';
     }
     if (!email.trim()) {
-      errors.email = 'Email is required.';
+      errors.email = 'Email обязателен.';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errors.email = 'Please enter a valid email address.';
+      errors.email = 'Введите корректный email адрес.';
     }
     if (!password) {
-      errors.password = 'Password is required.';
+      errors.password = 'Пароль обязателен.';
     } else if (password.length < 6) {
-      errors.password = 'Password must be at least 6 characters.';
+      errors.password = 'Пароль должен содержать не менее 6 символов.';
     }
     if (password !== confirmPassword) {
-      errors.confirm_password = 'Passwords do not match.';
+      errors.confirm_password = 'Пароли не совпадают.';
     }
 
     if (Object.keys(errors).length > 0) {
@@ -75,9 +75,9 @@ export default function RegisterPage() {
           setGeneralError(backendErrors.non_field_errors || backendErrors.detail);
         }
       } else if (err instanceof Error) {
-        setGeneralError(err.message || 'Registration failed. Please try again.');
+        setGeneralError(err.message || 'Ошибка регистрации. Попробуйте снова.');
       } else {
-        setGeneralError('Registration failed. Please try again.');
+        setGeneralError('Ошибка регистрации. Попробуйте снова.');
       }
     } finally {
       setSubmitting(false);
@@ -89,10 +89,10 @@ export default function RegisterPage() {
       <div className="card card-pad w-full max-w-[440px] shadow-[var(--shadow-pop)]">
         <div className="text-center mb-6">
           <h1 className="text-[26px] sm:text-[28px] font-bold text-[var(--ink)] tracking-tight">
-            Create an account
+            Создать аккаунт
           </h1>
           <p className="text-[14px] text-[var(--muted)] mt-1">
-            Start creating flashcards and taking quizzes
+            Начните создавать карточки и проходить тесты
           </p>
         </div>
 
@@ -100,8 +100,8 @@ export default function RegisterPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
-            label="Username"
-            placeholder="e.g. alex24"
+            label="Имя пользователя"
+            placeholder="например, alex24"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             error={fieldErrors.username}
@@ -121,9 +121,9 @@ export default function RegisterPage() {
           />
 
           <Input
-            label="Password"
+            label="Пароль"
             type="password"
-            placeholder="At least 6 characters"
+            placeholder="Не менее 6 символов"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             error={fieldErrors.password}
@@ -132,9 +132,9 @@ export default function RegisterPage() {
           />
 
           <Input
-            label="Confirm password"
+            label="Подтверждение пароля"
             type="password"
-            placeholder="Re-enter password"
+            placeholder="Повторите пароль"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             error={fieldErrors.confirm_password}
@@ -150,15 +150,15 @@ export default function RegisterPage() {
               fullWidth
               loading={submitting}
             >
-              Create account
+              Создать аккаунт
             </Button>
           </div>
         </form>
 
         <div className="mt-6 pt-5 border-t border-[var(--line)] text-center text-[14px] text-[var(--muted)]">
-          Already have an account?{' '}
+          Уже есть аккаунт?{' '}
           <Link href="/login" className="text-[var(--blue)] font-semibold hover:underline">
-            Log in
+            Войти
           </Link>
         </div>
       </div>

@@ -4,8 +4,8 @@ import { AuthProvider } from '@/hooks/useAuth';
 import { Header } from '@/components';
 
 export const metadata: Metadata = {
-  title: 'Flashcards — Learn anything with simple flashcards',
-  description: 'Create your own flashcards, practice with multiple-choice quizzes, and track your results.',
+  title: 'Flashcards — Изучайте что угодно с помощью простых карточек',
+  description: 'Создавайте свои наборы карточек, тренируйтесь с помощью тестов с выбором ответа и отслеживайте результаты.',
 };
 
 export default function RootLayout({
@@ -14,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="ru" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col bg-[var(--bg)] text-[var(--body)] font-sans antialiased">
         <AuthProvider>
           <Header />

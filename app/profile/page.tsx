@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Button, Loading } from '@/components';
+import { formatMonthYearRu } from '@/lib/format';
 import {
   ArrowLeft,
   Mail,
@@ -37,13 +38,10 @@ export default function ProfilePage() {
   };
 
   if (!initialized || !user) {
-    return <Loading fullPage text="Loading profile..." />;
+    return <Loading fullPage text="Загрузка профиля..." />;
   }
 
-  const memberSince = new Date(user.created_at).toLocaleDateString('en-US', {
-    month: 'long',
-    year: 'numeric',
-  });
+  const memberSince = formatMonthYearRu(user.created_at);
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-10 w-full flex-1">
@@ -54,7 +52,7 @@ export default function ProfilePage() {
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Dashboard
+          Назад к наборам
         </Link>
       </div>
 
@@ -75,7 +73,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex items-center gap-1.5 text-xs text-[var(--muted)] mt-1">
               <Calendar className="w-3 h-3 shrink-0" />
-              <span>Joined {memberSince}</span>
+              <span>В сервисе с {memberSince}</span>
             </div>
           </div>
         </div>
@@ -83,13 +81,13 @@ export default function ProfilePage() {
         {/* Stats Grid */}
         <div>
           <h2 className="text-xs font-bold text-[var(--muted)] uppercase tracking-wider mb-3">
-            Activity &amp; Stats
+            Активность и статистика
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="p-4 rounded-[14px] bg-[var(--surface-2)] border border-[var(--line)]">
               <div className="flex items-center justify-between text-[var(--muted)] text-xs font-semibold mb-1">
-                <span>Sets Created</span>
+                <span>Создано наборов</span>
                 <Layers className="w-4 h-4 text-[var(--blue)]" />
               </div>
               <div className="text-[24px] font-bold text-[var(--ink)]">
@@ -99,7 +97,7 @@ export default function ProfilePage() {
 
             <div className="p-4 rounded-[14px] bg-[var(--surface-2)] border border-[var(--line)]">
               <div className="flex items-center justify-between text-[var(--muted)] text-xs font-semibold mb-1">
-                <span>Total Cards</span>
+                <span>Всего карточек</span>
                 <BookOpen className="w-4 h-4 text-[var(--green)]" />
               </div>
               <div className="text-[24px] font-bold text-[var(--ink)]">
@@ -109,7 +107,7 @@ export default function ProfilePage() {
 
             <div className="p-4 rounded-[14px] bg-[var(--surface-2)] border border-[var(--line)]">
               <div className="flex items-center justify-between text-[var(--muted)] text-xs font-semibold mb-1">
-                <span>Quizzes Taken</span>
+                <span>Пройдено тестов</span>
                 <Award className="w-4 h-4 text-[var(--amber)]" />
               </div>
               <div className="text-[24px] font-bold text-[var(--ink)]">
@@ -121,7 +119,7 @@ export default function ProfilePage() {
 
         {/* Logout Section */}
         <div className="pt-4 border-t border-[var(--line)] flex items-center justify-between">
-          <span className="text-xs text-[var(--muted)]">Session active for 7 days</span>
+          <span className="text-xs text-[var(--muted)]">Сессия активна 7 дней</span>
           <Button
             variant="ghost"
             size="md"
@@ -129,7 +127,7 @@ export default function ProfilePage() {
             icon={<LogOut className="w-4 h-4" />}
             className="text-[var(--red-strong)] hover:bg-[var(--red-bg)]"
           >
-            Logout
+            Выйти
           </Button>
         </div>
       </div>
