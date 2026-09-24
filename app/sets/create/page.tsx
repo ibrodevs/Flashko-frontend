@@ -313,9 +313,9 @@ touch, Создаёт пустой файл`;
         )}
 
         {/* Действия формы */}
-        <div className="flex items-center justify-end gap-3 pt-4">
-          <Link href="/dashboard">
-            <Button variant="ghost" size="md">
+        <div className="flex flex-col-reverse xs:flex-row items-stretch xs:items-center justify-end gap-2.5 pt-4">
+          <Link href="/dashboard" className="w-full xs:w-auto">
+            <Button variant="ghost" size="md" fullWidth>
               Отмена
             </Button>
           </Link>
@@ -323,8 +323,10 @@ touch, Создаёт пустой файл`;
             type="submit"
             variant="primary"
             size="lg"
+            fullWidth
             loading={submitting}
             disabled={parsedCards.length === 0 || parseErrors.length > 0}
+            className="xs:w-auto"
           >
             Создать набор
           </Button>

@@ -256,8 +256,8 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
         {/* Action Buttons Toolbar */}
         <div className="pt-4 border-t border-[var(--line)] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           {/* Primary Learning Actions */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
-            <Link href={`/sets/${setId}/quiz`} className="flex-1 sm:flex-initial">
+          <div className="flex flex-col xs:flex-row items-stretch sm:items-center gap-2 sm:gap-2.5 w-full sm:w-auto">
+            <Link href={`/sets/${setId}/quiz`} className="flex-1">
               <Button
                 variant="primary"
                 size="md"
@@ -270,7 +270,7 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
             </Link>
 
             {mistakeCount > 0 && (
-              <Link href={`/sets/${setId}/quiz?mistakes=true`} className="flex-1 sm:flex-initial">
+              <Link href={`/sets/${setId}/quiz?mistakes=true`} className="flex-1">
                 <Button
                   variant="secondary"
                   size="md"
@@ -285,30 +285,32 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
           </div>
 
           {/* Utility Actions */}
-          <div className="flex flex-wrap items-center gap-2 self-stretch sm:self-auto justify-end">
+          <div className="grid grid-cols-3 sm:flex sm:items-center gap-2 w-full sm:w-auto">
             <Button
               variant="secondary"
               size="md"
+              fullWidth
               onClick={() => setShareModalOpen(true)}
               icon={<Share2 className="w-4 h-4" />}
             >
-              Поделиться
+              <span className="text-xs sm:text-sm truncate">Поделиться</span>
             </Button>
 
-            <Link href={`/sets/${setId}/edit`}>
-              <Button variant="secondary" size="md" icon={<Edit2 className="w-3.5 h-3.5" />}>
-                Редактировать
+            <Link href={`/sets/${setId}/edit`} className="w-full sm:w-auto">
+              <Button variant="secondary" size="md" fullWidth icon={<Edit2 className="w-3.5 h-3.5" />}>
+                <span className="text-xs sm:text-sm truncate">Изменить</span>
               </Button>
             </Link>
 
             <Button
               variant="ghost"
               size="md"
+              fullWidth
               onClick={() => setDeleteModalOpen(true)}
               icon={<Trash2 className="w-4 h-4" />}
               className="text-[var(--red-strong)] hover:bg-[var(--red-bg)]"
             >
-              Удалить
+              <span className="text-xs sm:text-sm truncate">Удалить</span>
             </Button>
           </div>
         </div>

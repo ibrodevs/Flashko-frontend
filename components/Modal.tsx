@@ -50,13 +50,13 @@ export function Modal({
       onClick={onClose}
     >
       <div
-        className={`w-full ${maxWidthClass} max-h-[min(90vh,calc(100dvh-32px))] overflow-y-auto bg-[var(--surface)] border border-[var(--line)] rounded-[22px] shadow-[var(--shadow-modal)] p-6 sm:p-7 relative transition-transform duration-200 transform scale-100`}
+        className={`w-full ${maxWidthClass} max-h-[min(90vh,calc(100dvh-32px))] overflow-y-auto bg-[var(--surface)] border border-[var(--line)] rounded-[20px] sm:rounded-[22px] shadow-[var(--shadow-modal)] p-5 sm:p-7 relative transition-transform duration-200 transform scale-100`}
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
           aria-label="Закрыть"
-          className="absolute top-5 right-5 w-8 h-8 rounded-[8px] flex items-center justify-center text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--hover)] transition-colors"
+          className="absolute top-4 right-4 sm:top-5 sm:right-5 w-8 h-8 rounded-[8px] flex items-center justify-center text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--hover)] transition-colors"
         >
           <X className="w-5 h-5" />
         </button>

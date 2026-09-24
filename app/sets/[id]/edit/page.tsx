@@ -245,9 +245,9 @@ export default function EditSetPage({ params }: { params: Promise<{ id: string }
         </div>
 
         {/* Form Actions */}
-        <div className="flex items-center justify-end gap-3 pt-6 border-t border-[var(--line)]">
-          <Link href={`/sets/${setId}`}>
-            <Button variant="ghost" size="md">
+        <div className="flex flex-col-reverse xs:flex-row items-stretch xs:items-center justify-end gap-2.5 pt-6 border-t border-[var(--line)]">
+          <Link href={`/sets/${setId}`} className="w-full xs:w-auto">
+            <Button variant="ghost" size="md" fullWidth>
               Отмена
             </Button>
           </Link>
@@ -255,8 +255,10 @@ export default function EditSetPage({ params }: { params: Promise<{ id: string }
             type="submit"
             variant="primary"
             size="lg"
+            fullWidth
             loading={saving}
             icon={<Save className="w-4 h-4" />}
+            className="xs:w-auto"
           >
             Сохранить изменения
           </Button>

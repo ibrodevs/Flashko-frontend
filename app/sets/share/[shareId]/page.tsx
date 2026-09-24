@@ -170,8 +170,8 @@ export default function SharedSetPage({ params }: { params: Promise<{ shareId: s
           </div>
         </div>
 
-        {/* Action buttons toolbar */}
-        <div className="pt-4 border-t border-[var(--line)] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        {/* Action buttons toolbar (desktop; on mobile sticky bottom bar is used) */}
+        <div className="pt-4 border-t border-[var(--line)] hidden sm:flex sm:items-center sm:justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <Button
               variant="primary"
