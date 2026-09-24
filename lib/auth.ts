@@ -59,4 +59,19 @@ export const auth = {
   async me(): Promise<User> {
     return api.get<User>('/api/auth/me/');
   },
+
+  async changePassword(data: {
+    old_password: string;
+    new_password: string;
+    confirm_password?: string;
+  }): Promise<{ detail: string }> {
+    const res = await api.post<{ detail: string; access?: string; refresh?: string }>('/api/auth/change-password/', data);
+    if (res.access) {
+      setAccessToken(res.access);
+    }
+    if (res.refresh) {
+      setRefreshToken(res.refresh);
+    }
+    return { detail: res.detail };
+  },
 };
