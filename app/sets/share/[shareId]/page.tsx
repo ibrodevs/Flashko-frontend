@@ -142,37 +142,37 @@ export default function SharedSetPage({ params }: { params: Promise<{ shareId: s
 
       {/* Main Set Card */}
       <div className="card card-pad mb-6 sm:mb-8 space-y-5">
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-5">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-[24px] sm:text-[32px] font-bold text-[var(--ink)] tracking-tight break-words">
-              {setDetail.title}
-            </h1>
-            {setDetail.description && (
-              <p className="text-[14.5px] sm:text-[16px] text-[var(--muted)] mt-2 leading-relaxed whitespace-pre-wrap">
-                {setDetail.description}
-              </p>
+        <div>
+          <h1 className="text-[26px] sm:text-[32px] font-bold text-[var(--ink)] tracking-tight break-words">
+            {setDetail.title}
+          </h1>
+          {setDetail.description && (
+            <p className="text-[14.5px] sm:text-[16px] text-[var(--muted)] mt-2 leading-relaxed whitespace-pre-wrap">
+              {setDetail.description}
+            </p>
+          )}
+
+          <div className="flex flex-wrap items-center gap-4 mt-4 text-[13px] sm:text-[13.5px] text-[var(--muted)] font-medium">
+            {setDetail.author_username && (
+              <span className="flex items-center gap-1.5 text-[var(--ink)] font-semibold">
+                <UserIcon className="w-3.5 h-3.5 text-[var(--blue)]" />
+                Автор: {setDetail.author_username}
+              </span>
             )}
-
-            <div className="flex flex-wrap items-center gap-4 mt-4 text-[13px] sm:text-[13.5px] text-[var(--muted)] font-medium">
-              {setDetail.author_username && (
-                <span className="flex items-center gap-1.5 text-[var(--ink)] font-semibold">
-                  <UserIcon className="w-3.5 h-3.5 text-[var(--blue)]" />
-                  Автор: {setDetail.author_username}
-                </span>
-              )}
-              <span className="flex items-center gap-1.5">
-                <BookOpen className="w-4 h-4" />
-                {setDetail.cards.length} {pluralize(setDetail.cards.length, 'карточка', 'карточки', 'карточек')}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Calendar className="w-4 h-4" />
-                {formattedDate}
-              </span>
-            </div>
+            <span className="flex items-center gap-1.5">
+              <BookOpen className="w-4 h-4" />
+              {pluralize(setDetail.cards.length, 'карточка', 'карточки', 'карточек')}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Calendar className="w-4 h-4" />
+              {formattedDate}
+            </span>
           </div>
+        </div>
 
-          {/* Action buttons */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
+        {/* Action buttons toolbar */}
+        <div className="pt-4 border-t border-[var(--line)] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-2.5">
             <Button
               variant="primary"
               size="md"
@@ -182,7 +182,9 @@ export default function SharedSetPage({ params }: { params: Promise<{ shareId: s
             >
               {user ? 'Скопировать себе' : 'Войти и скопировать'}
             </Button>
+          </div>
 
+          <div className="flex items-center gap-2">
             <Button
               variant="secondary"
               size="md"

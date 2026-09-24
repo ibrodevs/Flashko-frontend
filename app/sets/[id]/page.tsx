@@ -225,38 +225,39 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
 
       {/* Set Header Card */}
       <div className="card card-pad mb-6 sm:mb-8 space-y-5">
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-5">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-[24px] sm:text-[32px] font-bold text-[var(--ink)] tracking-tight break-words">
-              {setDetail.title}
-            </h1>
-            {setDetail.description && (
-              <p className="text-[14.5px] sm:text-[16px] text-[var(--muted)] mt-2 leading-relaxed whitespace-pre-wrap">
-                {setDetail.description}
-              </p>
+        <div>
+          <h1 className="text-[26px] sm:text-[32px] font-bold text-[var(--ink)] tracking-tight break-words">
+            {setDetail.title}
+          </h1>
+          {setDetail.description && (
+            <p className="text-[14.5px] sm:text-[16px] text-[var(--muted)] mt-2 leading-relaxed whitespace-pre-wrap">
+              {setDetail.description}
+            </p>
+          )}
+
+          <div className="flex flex-wrap items-center gap-4 mt-4 text-[13px] sm:text-[13.5px] text-[var(--muted)] font-medium">
+            <span className="flex items-center gap-1.5 text-[var(--ink)] font-semibold">
+              <BookOpen className="w-4 h-4 text-[var(--blue)]" />
+              {pluralize(setDetail.cards.length, 'карточка', 'карточки', 'карточек')}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Calendar className="w-4 h-4" />
+              Создан {formattedDate}
+            </span>
+            {mistakeCount > 0 && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[var(--amber-bg)] text-[var(--amber)] border border-[var(--amber)]/20">
+                <AlertCircle className="w-3.5 h-3.5" />
+                {pluralize(mistakeCount, 'ошибка', 'ошибки', 'ошибок')}
+              </span>
             )}
-
-            <div className="flex flex-wrap items-center gap-4 mt-4 text-[13px] sm:text-[13.5px] text-[var(--muted)] font-medium">
-              <span className="flex items-center gap-1.5 text-[var(--ink)] font-semibold">
-                <BookOpen className="w-4 h-4 text-[var(--blue)]" />
-                {setDetail.cards.length} {pluralize(setDetail.cards.length, 'карточка', 'карточки', 'карточек')}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Calendar className="w-4 h-4" />
-                Создан {formattedDate}
-              </span>
-              {mistakeCount > 0 && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[var(--amber-bg)] text-[var(--amber)] border border-[var(--amber)]/20">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  {mistakeCount} {pluralize(mistakeCount, 'ошибка', 'ошибки', 'ошибок')}
-                </span>
-              )}
-            </div>
           </div>
+        </div>
 
-          {/* Action Buttons - Optimized for mobile & desktop */}
-          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 sm:gap-2.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-[var(--line)]">
-            <Link href={`/sets/${setId}/quiz`} className="col-span-2 sm:col-span-1">
+        {/* Action Buttons Toolbar */}
+        <div className="pt-4 border-t border-[var(--line)] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          {/* Primary Learning Actions */}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+            <Link href={`/sets/${setId}/quiz`} className="flex-1 sm:flex-initial">
               <Button
                 variant="primary"
                 size="md"
@@ -269,7 +270,7 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
             </Link>
 
             {mistakeCount > 0 && (
-              <Link href={`/sets/${setId}/quiz?mistakes=true`} className="col-span-2 sm:col-span-1">
+              <Link href={`/sets/${setId}/quiz?mistakes=true`} className="flex-1 sm:flex-initial">
                 <Button
                   variant="secondary"
                   size="md"
@@ -281,7 +282,10 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
                 </Button>
               </Link>
             )}
+          </div>
 
+          {/* Utility Actions */}
+          <div className="flex flex-wrap items-center gap-2 self-stretch sm:self-auto justify-end">
             <Button
               variant="secondary"
               size="md"
@@ -292,7 +296,7 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
             </Button>
 
             <Link href={`/sets/${setId}/edit`}>
-              <Button variant="secondary" size="md" fullWidth icon={<Edit2 className="w-3.5 h-3.5" />}>
+              <Button variant="secondary" size="md" icon={<Edit2 className="w-3.5 h-3.5" />}>
                 Редактировать
               </Button>
             </Link>
@@ -302,7 +306,7 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
               size="md"
               onClick={() => setDeleteModalOpen(true)}
               icon={<Trash2 className="w-4 h-4" />}
-              className="text-[var(--red-strong)] hover:bg-[var(--red-bg)] col-span-2 sm:col-span-1"
+              className="text-[var(--red-strong)] hover:bg-[var(--red-bg)]"
             >
               Удалить
             </Button>
@@ -313,7 +317,7 @@ export default function SetDetailPage({ params }: { params: Promise<{ id: string
           <div className="p-3.5 rounded-[12px] bg-[var(--amber-bg)] text-[var(--amber)] text-xs font-semibold flex items-center gap-2 border border-[var(--amber)]/20">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>
-              Для запуска теста требуется минимум 4 карточки. Добавьте ещё {remainingCards} {pluralize(remainingCards, 'карточку', 'карточки', 'карточек')}, чтобы начать тест.
+              Для запуска теста требуется минимум 4 карточки. Добавьте ещё {pluralize(remainingCards, 'карточку', 'карточки', 'карточек')}, чтобы начать тест.
             </span>
           </div>
         )}
