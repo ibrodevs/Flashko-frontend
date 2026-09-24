@@ -1,4 +1,4 @@
-import { api, setAccessToken, clearAccessToken } from './api';
+import { api, setAccessToken, clearAccessToken, setRefreshToken, clearRefreshToken, getRefreshToken } from './api';
 import { User, AuthResponse, RefreshResponse } from '@/types';
 
 export const auth = {
@@ -10,6 +10,9 @@ export const auth = {
   }): Promise<User> {
     const res = await api.post<AuthResponse>('/api/auth/register/', data, { skipAuth: true });
     setAccessToken(res.access);
+    if (res.refresh) {
+      setRefreshToken(res.refresh);
+    }
     return res.user;
   },
 
@@ -19,27 +22,37 @@ export const auth = {
   }): Promise<User> {
     const res = await api.post<AuthResponse>('/api/auth/login/', credentials, { skipAuth: true });
     setAccessToken(res.access);
+    if (res.refresh) {
+      setRefreshToken(res.refresh);
+    }
     return res.user;
   },
 
   async refresh(): Promise<string | null> {
     try {
-      const res = await api.post<RefreshResponse>('/api/auth/refresh/', {}, { skipAuth: true, retry: false });
+      const storedRefresh = getRefreshToken();
+      const res = await api.post<RefreshResponse>('/api/auth/refresh/', { refresh: storedRefresh || undefined }, { skipAuth: true, retry: false });
       setAccessToken(res.access);
+      if (res.refresh) {
+        setRefreshToken(res.refresh);
+      }
       return res.access;
     } catch {
       clearAccessToken();
+      clearRefreshToken();
       return null;
     }
   },
 
   async logout(): Promise<void> {
     try {
-      await api.post('/api/auth/logout/', {}, { retry: false });
+      const storedRefresh = getRefreshToken();
+      await api.post('/api/auth/logout/', { refresh: storedRefresh || undefined }, { retry: false });
     } catch {
       // Ignore logout errors
     } finally {
       clearAccessToken();
+      clearRefreshToken();
     }
   },
 

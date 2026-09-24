@@ -1,6 +1,7 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 let inMemoryToken: string | null = null;
+let inMemoryRefreshToken: string | null = null;
 let isRefreshing = false;
 let refreshSubscribers: ((token: string | null) => void)[] = [];
 
@@ -22,8 +23,30 @@ export function setAccessToken(token: string | null) {
   }
 }
 
+export function getRefreshToken(): string | null {
+  if (typeof window !== 'undefined' && !inMemoryRefreshToken) {
+    inMemoryRefreshToken = sessionStorage.getItem('fc_refresh_token');
+  }
+  return inMemoryRefreshToken;
+}
+
+export function setRefreshToken(token: string | null) {
+  inMemoryRefreshToken = token;
+  if (typeof window !== 'undefined') {
+    if (token) {
+      sessionStorage.setItem('fc_refresh_token', token);
+    } else {
+      sessionStorage.removeItem('fc_refresh_token');
+    }
+  }
+}
+
 export function clearAccessToken() {
   setAccessToken(null);
+}
+
+export function clearRefreshToken() {
+  setRefreshToken(null);
 }
 
 function onRefreshed(token: string | null) {
@@ -103,26 +126,33 @@ export async function request<T = unknown>(endpoint: string, options: RequestOpt
     if (!isRefreshing) {
       isRefreshing = true;
       try {
+        const fallbackRefresh = getRefreshToken();
         const refreshRes = await fetch(`${API_BASE_URL}/api/auth/refresh/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refresh: fallbackRefresh || undefined }),
           credentials: 'include',
         });
 
         if (refreshRes.ok) {
-          const refreshData = (await refreshRes.json()) as { access: string };
+          const refreshData = (await refreshRes.json()) as { access: string; refresh?: string };
           setAccessToken(refreshData.access);
+          if (refreshData.refresh) {
+            setRefreshToken(refreshData.refresh);
+          }
           onRefreshed(refreshData.access);
           isRefreshing = false;
           // Retry original request with new token
           return request<T>(endpoint, { ...options, retry: false });
         } else {
           clearAccessToken();
+          clearRefreshToken();
           onRefreshed(null);
           isRefreshing = false;
         }
       } catch {
         clearAccessToken();
+        clearRefreshToken();
         onRefreshed(null);
         isRefreshing = false;
       }
