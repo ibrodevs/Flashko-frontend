@@ -92,7 +92,7 @@ export default function RegisterPage() {
             Создать аккаунт
           </h1>
           <p className="text-[14px] text-[var(--muted)] mt-1">
-            Начните создавать карточки и проходить тесты
+            Начните учиться и проходить тесты в Flashko
           </p>
         </div>
 

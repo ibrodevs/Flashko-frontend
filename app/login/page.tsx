@@ -76,7 +76,7 @@ export default function LoginPage() {
             С возвращением
           </h1>
           <p className="text-[14px] text-[var(--muted)] mt-1">
-            Войдите в свой аккаунт Flashcards
+            Войдите в свой аккаунт Flashko
           </p>
         </div>
 

@@ -53,7 +53,7 @@ export function Header() {
           <div className="w-8 h-8 rounded-lg bg-[var(--blue)] text-white flex items-center justify-center shadow-sm">
             <BookOpen className="w-4 h-4" />
           </div>
-          <span>Flashcards</span>
+          <span>Flashko</span>
         </Link>
 
         {/* Навигация и контролы */}

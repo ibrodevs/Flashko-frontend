@@ -133,7 +133,7 @@ export default function LandingPage() {
 
       {/* Подвал */}
       <footer className="w-full py-6 border-t border-[var(--line)] text-center text-xs text-[var(--muted)]">
-        Flashcards Quiz Web App &copy; {new Date().getFullYear()}. Простое и быстрое обучение.
+        Flashko &copy; {new Date().getFullYear()}. Простое и быстрое обучение.
       </footer>
     </div>
   );
