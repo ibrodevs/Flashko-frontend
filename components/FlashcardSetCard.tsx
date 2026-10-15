@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { FlashcardSet } from '@/types';
+import { sets as setsApi } from '@/lib/sets';
 import { Button } from './Button';
 import { BookOpen, Calendar } from 'lucide-react';
 import { pluralize, formatDateRu } from '@/lib/format';
@@ -15,8 +16,16 @@ export function FlashcardSetCard({ set }: FlashcardSetCardProps) {
   const formattedDate = formatDateRu(set.created_at);
   const cardsText = pluralize(set.cards_count, 'карточка', 'карточки', 'карточек');
 
+  const warmDetails = () => {
+    setsApi.prefetchById(set.id);
+  };
+
   return (
-    <div className="card card-pad flex flex-col justify-between h-full transition-all hover:border-[var(--line-strong)] hover:shadow-[var(--shadow-pop)] group">
+    <div
+      className="card card-pad flex flex-col justify-between h-full transition-all hover:border-[var(--line-strong)] hover:shadow-[var(--shadow-pop)] group"
+      onPointerEnter={warmDetails}
+      onFocusCapture={warmDetails}
+    >
       <div>
         <Link href={`/sets/${set.id}`} className="block focus:outline-none">
           <h3 className="text-[19px] sm:text-[20px] font-bold text-[var(--ink)] group-hover:text-[var(--blue)] transition-colors line-clamp-1">
@@ -49,7 +58,6 @@ export function FlashcardSetCard({ set }: FlashcardSetCardProps) {
           </p>
         )}
       </div>
-
 
       <div className="mt-6 pt-4 border-t border-[var(--line)] flex items-center justify-between gap-3">
         <div className="flex flex-col gap-1 text-[13px] text-[var(--muted)]">
