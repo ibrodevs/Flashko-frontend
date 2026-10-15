@@ -23,6 +23,27 @@ function clearDetailCache(id?: number | string): void {
   detailCache.delete(detailKey(id));
 }
 
+async function getSetDetail(id: number | string): Promise<FlashcardSetDetail> {
+  const key = detailKey(id);
+  const cached = detailCache.get(key);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.promise;
+  }
+
+  const promise = api.get<FlashcardSetDetail>(`/api/sets/${id}/`);
+  detailCache.set(key, {
+    expiresAt: Date.now() + DETAIL_CACHE_TTL_MS,
+    promise,
+  });
+
+  try {
+    return await promise;
+  } catch (error) {
+    detailCache.delete(key);
+    throw error;
+  }
+}
+
 export const sets = {
   getCached(): FlashcardSet[] | null {
     return readSetsCache();
@@ -39,29 +60,12 @@ export const sets = {
     return data;
   },
 
-  async getById(id: number | string): Promise<FlashcardSetDetail> {
-    const key = detailKey(id);
-    const cached = detailCache.get(key);
-    if (cached && cached.expiresAt > Date.now()) {
-      return cached.promise;
-    }
-
-    const promise = api.get<FlashcardSetDetail>(`/api/sets/${id}/`);
-    detailCache.set(key, {
-      expiresAt: Date.now() + DETAIL_CACHE_TTL_MS,
-      promise,
-    });
-
-    try {
-      return await promise;
-    } catch (error) {
-      detailCache.delete(key);
-      throw error;
-    }
+  getById(id: number | string): Promise<FlashcardSetDetail> {
+    return getSetDetail(id);
   },
 
   prefetchById(id: number | string): void {
-    void this.getById(id).catch(() => {
+    void getSetDetail(id).catch(() => {
       // Navigation will surface the real error if the user opens the set.
     });
   },
