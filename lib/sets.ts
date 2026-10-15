@@ -1,4 +1,5 @@
 import { api } from './api';
+import { clearSetsCache, readSetsCache, writeSetsCache } from './sets-cache';
 import {
   FlashcardSet,
   FlashcardSetDetail,
@@ -8,8 +9,18 @@ import {
 } from '@/types';
 
 export const sets = {
+  getCached(): FlashcardSet[] | null {
+    return readSetsCache();
+  },
+
+  clearCache(): void {
+    clearSetsCache();
+  },
+
   async getAll(): Promise<FlashcardSet[]> {
-    return api.get<FlashcardSet[]>('/api/sets/');
+    const data = await api.get<FlashcardSet[]>('/api/sets/');
+    writeSetsCache(data);
+    return data;
   },
 
   async getById(id: number | string): Promise<FlashcardSetDetail> {
@@ -17,15 +28,20 @@ export const sets = {
   },
 
   async create(payload: CreateSetPayload): Promise<FlashcardSetDetail> {
-    return api.post<FlashcardSetDetail>('/api/sets/', payload);
+    const result = await api.post<FlashcardSetDetail>('/api/sets/', payload);
+    clearSetsCache();
+    return result;
   },
 
   async update(id: number | string, payload: UpdateSetPayload): Promise<FlashcardSetDetail> {
-    return api.patch<FlashcardSetDetail>(`/api/sets/${id}/`, payload);
+    const result = await api.patch<FlashcardSetDetail>(`/api/sets/${id}/`, payload);
+    clearSetsCache();
+    return result;
   },
 
   async delete(id: number | string): Promise<void> {
-    return api.delete(`/api/sets/${id}/`);
+    await api.delete(`/api/sets/${id}/`);
+    clearSetsCache();
   },
 
   async getCards(setId: number | string): Promise<Flashcard[]> {
@@ -33,15 +49,20 @@ export const sets = {
   },
 
   async addCard(setId: number | string, card: { term: string; definition: string }): Promise<Flashcard> {
-    return api.post<Flashcard>(`/api/sets/${setId}/cards/`, card);
+    const result = await api.post<Flashcard>(`/api/sets/${setId}/cards/`, card);
+    clearSetsCache();
+    return result;
   },
 
   async updateCard(cardId: number | string, card: { term?: string; definition?: string }): Promise<Flashcard> {
-    return api.patch<Flashcard>(`/api/cards/${cardId}/`, card);
+    const result = await api.patch<Flashcard>(`/api/cards/${cardId}/`, card);
+    clearSetsCache();
+    return result;
   },
 
   async deleteCard(cardId: number | string): Promise<void> {
-    return api.delete(`/api/cards/${cardId}/`);
+    await api.delete(`/api/cards/${cardId}/`);
+    clearSetsCache();
   },
 
   async getShared(shareId: string): Promise<FlashcardSetDetail> {
@@ -49,7 +70,8 @@ export const sets = {
   },
 
   async copyShared(shareId: string): Promise<FlashcardSetDetail> {
-    return api.post<FlashcardSetDetail>(`/api/sets/share/${shareId}/copy/`);
+    const result = await api.post<FlashcardSetDetail>(`/api/sets/share/${shareId}/copy/`);
+    clearSetsCache();
+    return result;
   },
 };
-

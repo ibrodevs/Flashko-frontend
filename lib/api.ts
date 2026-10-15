@@ -99,9 +99,14 @@ export async function request<T = unknown>(endpoint: string, options: RequestOpt
   const token = getAccessToken();
 
   const reqHeaders: Record<string, string> = {
-    'Content-Type': 'application/json',
     ...(headers as Record<string, string>),
   };
+
+  // Do not send Content-Type on bodyless GET requests. For public GETs this
+  // avoids unnecessary CORS preflight requests altogether.
+  if (rest.body !== undefined && rest.body !== null && !reqHeaders['Content-Type']) {
+    reqHeaders['Content-Type'] = 'application/json';
+  }
 
   if (token && !skipAuth) {
     reqHeaders['Authorization'] = `Bearer ${token}`;
@@ -114,14 +119,13 @@ export async function request<T = unknown>(endpoint: string, options: RequestOpt
     response = await fetch(url, {
       ...rest,
       headers: reqHeaders,
-      credentials: 'include', // Includes HttpOnly refresh token cookie
+      credentials: 'include',
     });
   } catch (err: unknown) {
     const errorMsg = err instanceof Error ? err.message : 'Ошибка сети. Проверьте подключение к интернету.';
     throw new ApiError(0, errorMsg);
   }
 
-  // Handle 401 Unauthorized for token refresh
   if (response.status === 401 && retry && !skipAuth && !endpoint.includes('/auth/login') && !endpoint.includes('/auth/register') && !endpoint.includes('/auth/refresh')) {
     if (!isRefreshing) {
       isRefreshing = true;
@@ -142,7 +146,6 @@ export async function request<T = unknown>(endpoint: string, options: RequestOpt
           }
           onRefreshed(refreshData.access);
           isRefreshing = false;
-          // Retry original request with new token
           return request<T>(endpoint, { ...options, retry: false });
         } else {
           clearAccessToken();
@@ -157,7 +160,6 @@ export async function request<T = unknown>(endpoint: string, options: RequestOpt
         isRefreshing = false;
       }
     } else {
-      // Wait for ongoing refresh
       return new Promise<T>((resolve, reject) => {
         addRefreshSubscriber((newToken) => {
           if (newToken) {

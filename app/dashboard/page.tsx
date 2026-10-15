@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
+import { getAccessToken } from '@/lib/api';
 import { sets as setsApi } from '@/lib/sets';
 import { FlashcardSet } from '@/types';
 import {
@@ -22,6 +23,28 @@ export default function DashboardPage() {
   const [sets, setSets] = useState<FlashcardSet[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const requestInFlight = useRef(false);
+  const loadedFromNetwork = useRef(false);
+
+  const loadSets = useCallback(async (background = false) => {
+    if (requestInFlight.current || loadedFromNetwork.current) return;
+
+    requestInFlight.current = true;
+    if (!background) setLoading(true);
+    setError('');
+
+    try {
+      const data = await setsApi.getAll();
+      setSets(data);
+      loadedFromNetwork.current = true;
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Не удалось загрузить наборы карточек.';
+      setError(msg);
+    } finally {
+      requestInFlight.current = false;
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (initialized && !user) {
@@ -30,24 +53,28 @@ export default function DashboardPage() {
   }, [initialized, user, router]);
 
   useEffect(() => {
-    async function loadSets() {
-      if (!user) return;
-      setError('');
-      try {
-        const data = await setsApi.getAll();
-        setSets(data);
-      } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : 'Не удалось загрузить наборы карточек.';
-        setError(msg);
-      } finally {
-        setLoading(false);
-      }
+    const cachedSets = setsApi.getCached();
+    if (cachedSets) {
+      setSets(cachedSets);
+      setLoading(false);
     }
 
-    if (user) {
-      loadSets();
+    // On a normal reload the access token is already in sessionStorage.
+    // Start loading sets immediately, in parallel with /auth/me, instead of
+    // waiting for authentication initialization to finish first.
+    if (getAccessToken()) {
+      void loadSets(Boolean(cachedSets));
     }
-  }, [user]);
+  }, [loadSets]);
+
+  useEffect(() => {
+    // Handles restored sessions where only the refresh cookie was available.
+    // loadedFromNetwork prevents a second request if the parallel request above
+    // has already completed by the time authentication finishes.
+    if (user) {
+      void loadSets(Boolean(setsApi.getCached()));
+    }
+  }, [user, loadSets]);
 
   if (!initialized || (loading && sets.length === 0)) {
     return <Loading fullPage text="Загрузка ваших наборов..." />;
@@ -59,7 +86,6 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 w-full flex-1 flex flex-col">
-      {/* Шапка дашборда */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[var(--line)]">
         <div>
           <h1 className="text-[26px] sm:text-[32px] font-bold text-[var(--ink)] tracking-tight">
@@ -79,7 +105,6 @@ export default function DashboardPage() {
 
       {error && <ErrorMessage message={error} className="mt-6" />}
 
-      {/* Сетка наборов или Empty State */}
       <div className="mt-8 flex-1">
         {sets.length === 0 ? (
           <EmptyState

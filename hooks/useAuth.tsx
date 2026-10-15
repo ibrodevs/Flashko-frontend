@@ -36,15 +36,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     async function initAuth() {
       try {
-        // If we don't have token in memory, try refreshing via HttpOnly cookie
         if (!getAccessToken()) {
-          const newToken = await auth.refresh();
-          if (!newToken) {
-            if (isMounted) {
-              setUser(null);
-              setLoading(false);
-              setInitialized(true);
-            }
+          const refreshed = await auth.refresh();
+          if (!refreshed) {
+            if (isMounted) setUser(null);
+            return;
+          }
+
+          // The optimized refresh endpoint returns the user together with tokens,
+          // so we can avoid an extra /auth/me round trip after restoring a session.
+          if (refreshed.user) {
+            if (isMounted) setUser(refreshed.user);
             return;
           }
         }
@@ -65,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    initAuth();
+    void initAuth();
 
     return () => {
       isMounted = false;
