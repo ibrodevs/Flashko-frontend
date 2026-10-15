@@ -1,4 +1,5 @@
 import { api, setAccessToken, clearAccessToken, setRefreshToken, clearRefreshToken, getRefreshToken } from './api';
+import { clearSetsCache } from './sets-cache';
 import { User, AuthResponse, RefreshResponse } from '@/types';
 
 export const auth = {
@@ -13,6 +14,7 @@ export const auth = {
     if (res.refresh) {
       setRefreshToken(res.refresh);
     }
+    clearSetsCache();
     return res.user;
   },
 
@@ -25,10 +27,11 @@ export const auth = {
     if (res.refresh) {
       setRefreshToken(res.refresh);
     }
+    clearSetsCache();
     return res.user;
   },
 
-  async refresh(): Promise<string | null> {
+  async refresh(): Promise<RefreshResponse | null> {
     try {
       const storedRefresh = getRefreshToken();
       const res = await api.post<RefreshResponse>('/api/auth/refresh/', { refresh: storedRefresh || undefined }, { skipAuth: true, retry: false });
@@ -36,7 +39,7 @@ export const auth = {
       if (res.refresh) {
         setRefreshToken(res.refresh);
       }
-      return res.access;
+      return res;
     } catch {
       clearAccessToken();
       clearRefreshToken();
@@ -53,6 +56,7 @@ export const auth = {
     } finally {
       clearAccessToken();
       clearRefreshToken();
+      clearSetsCache();
     }
   },
 
