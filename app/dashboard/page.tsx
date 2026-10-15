@@ -24,9 +24,10 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const requestInFlight = useRef(false);
+  const loadedFromNetwork = useRef(false);
 
   const loadSets = useCallback(async (background = false) => {
-    if (requestInFlight.current) return;
+    if (requestInFlight.current || loadedFromNetwork.current) return;
 
     requestInFlight.current = true;
     if (!background) setLoading(true);
@@ -35,6 +36,7 @@ export default function DashboardPage() {
     try {
       const data = await setsApi.getAll();
       setSets(data);
+      loadedFromNetwork.current = true;
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Не удалось загрузить наборы карточек.';
       setError(msg);
@@ -67,6 +69,8 @@ export default function DashboardPage() {
 
   useEffect(() => {
     // Handles restored sessions where only the refresh cookie was available.
+    // loadedFromNetwork prevents a second request if the parallel request above
+    // has already completed by the time authentication finishes.
     if (user) {
       void loadSets(Boolean(setsApi.getCached()));
     }
